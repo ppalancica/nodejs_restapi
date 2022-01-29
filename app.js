@@ -8,15 +8,15 @@ app.use(morgan('combined'))
 
 app.get("/", (req, res) => {
   console.log("Responding to root route...")
+  res.send("Hellooo from ROOT")
+})
+
+app.get("/users", (req, res) => {
+  // res.send("Nodemon auto updates when I save this file")
   const user1 = { firstName: "Pavel", lastName: "Palancica" }
   const user2 = { firstName: "Ahmad", lastName: "Tabibi" }
   const user3 = { firstName: "Omar", lastName: "Qaddoumi" }
   res.json([user1, user2, user3])
-  // res.send("Hellooo from ROOT")
-})
-
-app.get("/users", (req, res) => {
-  res.send("Nodemon auto updates when I save this file")
 })
 
 // localhost:3000

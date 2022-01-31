@@ -25,15 +25,28 @@ router.get("/users", (req, res) => {
     })
 })
 
+const pool = mysql.createPool({
+    connectionLimit: 10,
+    host: 'localhost',
+    port: 8889,
+    user: 'root',
+    password: 'root',
+    database: 'nodejs_restapi_db'
+})
+
 function getConnection() {
-    return mysql.createConnection({
-        host: 'localhost',
-        port: 8889,
-        user: 'root',
-        password: 'root',
-        database: 'nodejs_restapi_db'
-    })
+    return pool
 }
+
+// function getConnection() {
+//     return mysql.createConnection({
+//         host: 'localhost',
+//         port: 8889,
+//         user: 'root',
+//         password: 'root',
+//         database: 'nodejs_restapi_db'
+//     })
+// }
 
 router.post('/user_create', (req, res) => {
     console.log("Trying to create a new user...")

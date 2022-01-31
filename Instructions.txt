@@ -1,0 +1,663 @@
+NodeJS REST API: Super Simple Setup - Express & NPM (Ep1)
+https://www.youtube.com/watch?v=F7NVpxxmmgM&list=PL0dzCUj1L5JE4w_OctDGyZOhML6OtJSqR&index=1
+
+
+--- Video 1
+
+https://nodejs.org/en/
+
+This package will install:
+	•	Node.js v16.13.2 to /usr/local/bin/node
+	•	npm v8.1.2 to /usr/local/bin/npm
+
+
+This package has installed:
+	•	Node.js v16.13.2 to /usr/local/bin/node
+	•	npm v8.1.2 to /usr/local/bin/npm
+Make sure that /usr/local/bin is in your $PATH.
+
+
+ppalancica@Pavels-MacBook-Pro ~ % pwd
+/Users/ppalancica
+
+ppalancica@Pavels-MacBook-Pro ~ % mkdir idevtv
+ppalancica@Pavels-MacBook-Pro ~ % cd idevtv
+ppalancica@Pavels-MacBook-Pro idevtv % mkdir node_projects
+ppalancica@Pavels-MacBook-Pro idevtv % cd node_projects
+ppalancica@Pavels-MacBook-Pro node_projects % mkdir nodejs_restapi
+ppalancica@Pavels-MacBook-Pro node_projects % ls
+nodejs_restapi
+ppalancica@Pavels-MacBook-Pro node_projects % cd nodejs_restapi
+ppalancica@Pavels-MacBook-Pro nodejs_restapi % ls
+
+open -a atom ./
+
+Inside Preferences / Settings / Install platformio-ide-terminal
+Then press + on Bottom Left corner.
+
+ppalancica@Pavels-MacBook-Pro nodejs_restapi % ls
+ppalancica@Pavels-MacBook-Pro nodejs_restapi % npm init
+This utility will walk you through creating a package.json file.
+It only covers the most common items, and tries to guess sensible defaults.
+
+See `npm help init` for definitive documentation on these fields
+and exactly what they do.
+
+Use `npm install <pkg>` afterwards to install a package and
+save it as a dependency in the package.json file.
+
+Press ^C at any time to quit.
+package name: (nodejs_restapi)
+version: (1.0.0)
+description:
+entry point: (index.js)
+test command:
+git repository:
+keywords:
+author:
+license: (ISC)
+About to write to /Users/ppalancica/idevtv/node_projects/nodejs_restapi/package.json:
+
+{
+  "name": "nodejs_restapi",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
+
+
+Is this OK? (yes)
+npm notice
+npm notice New minor version of npm available! 8.1.2 -> 8.4.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v8.4.0
+npm notice Run npm install -g npm@8.4.0 to update!
+npm notice
+ppalancica@Pavels-MacBook-Pro nodejs_restapi % ls
+package.json
+
+To install express:
+
+ppalancica@Pavels-MacBook-Pro nodejs_restapi % npm install express
+
+added 50 packages, and audited 51 packages in 2s
+
+2 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+ppalancica@Pavels-MacBook-Pro nodejs_restapi %
+
+It also installed node_modules that express needs.
+
+We need a file with code for launching the application server.
+
+Create an app.js file:
+
+// load our app server using express somehow...
+const express = require('express')
+const app = express()
+
+// localhost:3000
+app.listen(3000, () => {
+  console.log("Server is up and listening on 3000...")
+})
+
+ppalancica@Pavels-MacBook-Pro nodejs_restapi % ls
+app.js                  node_modules            package-lock.json       package.json
+ppalancica@Pavels-MacBook-Pro nodejs_restapi % node app.js
+
+Server is up and listening on 3000...
+
+Open in browser:
+http://localhost:3000/
+
+Should see the message:
+Cannot GET /
+
+Add this to app.js:
+
+app.get("/", (req, res) => {
+  console.log("Responding to root route...")
+  res.send("Hellooo from ROOT")
+})
+
+Opening http://localhost:3000/ in browser won't use the latest code.
+We have to restart the app, with Control + C:
+
+^C
+ppalancica@Pavels-MacBook-Pro nodejs_restapi % node app.js
+Server is up and listening on 3000...
+
+Because we don't want to restart every time in order the up to see all up-to-date changes,
+we can use setup a Daemon Service, which will watch for any changes in our files and restart
+the app whenever it's necessary.
+
+ppalancica@Pavels-MacBook-Pro nodejs_restapi % sudo npm i -g nodemon
+Password:
+
+added 117 packages, and audited 118 packages in 11s
+
+16 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+
+We can now use nodemon:
+
+ppalancica@Pavels-MacBook-Pro nodejs_restapi % nodemon app.js
+[nodemon] 2.0.15
+[nodemon] to restart at any time, enter `rs`
+[nodemon] watching path(s): *.*
+[nodemon] watching extensions: js,mjs,json
+[nodemon] starting `node app.js`
+Server is up and listening on 3000...
+
+Make some changes to app.js:
+
+app.get("/", (req, res) => {
+  console.log("Responding to root route...")
+  const user1 = { firstName: "Pavel", lastName: "Palancica" }
+  const user2 = { firstName: "Ahmad", lastName: "Tabibi" }
+  const user3 = { firstName: "Omar", lastName: "Qaddoumi" }
+  res.json([user1, user2, user3])
+  // res.send("Hellooo from ROOT")
+})
+
+To customize the log messages in the console, we can install morgan:
+
+ppalancica@Pavels-MacBook-Pro nodejs_restapi % npm install morgan
+
+added 5 packages, and audited 56 packages in 3s
+
+2 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+
+Add these lines to app.js:
+
+const morgan = require('morgan')
+
+app.use(morgan('short'))
+
+We can also use the 'combine' option with morgan:
+
+app.use(morgan('combined'))
+
+
+--- Video 2
+
+open -a "Visual Studio Code" .
+
+Install Terminal (by Jun Han) from Extensions, then restart the editor.
+
+We can launch the terminal using the button on the Bottom bar, or from Terminal + New Terminal menu.
+
+Install MySQL:
+
+ppalancica@Pavels-MacBook-Pro nodejs_restapi % npm i mysql
+
+added 12 packages, and audited 68 packages in 3s
+
+2 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+
+Start the server:
+
+ppalancica@Pavels-MacBook-Pro nodejs_restapi % nodemon app.js
+[nodemon] 2.0.15
+[nodemon] to restart at any time, enter `rs`
+[nodemon] watching path(s): *.*
+[nodemon] watching extensions: js,mjs,json
+[nodemon] starting `node app.js`
+Server is up and listening on 3000...
+
+We want to go to urls like http://localhost:3000/user/2 and get user with id = 2.
+
+Create a MySQL database with a users table, containing id, first_name and last_name.
+
+Connect to that table and get users data using this code in app.js:
+
+// load our app server using express somehow...
+const express = require('express')
+const app = express()
+const morgan = require('morgan')
+const mysql = require('mysql')
+
+// app.use(morgan('short'))
+app.use(morgan('combined'))
+
+// app.get("/user/:id", (req, res) => {
+//   console.log("Fetching user with id: " + req.params.id)
+//   res.end()
+// })
+
+app.get("/user/:id", (req, res) => {
+  console.log("Fetching user with id: " + req.params.id)
+
+  const connection = mysql.createConnection({
+    host: 'localhost',
+    port: 8889,
+    user: 'root',
+    password: 'root',
+    database: 'nodejs_restapi_db'
+  })
+
+  const userId = req.params.id
+  const queryString = "SELECT * FROM users WHERE id = ?"
+  connection.query(queryString, [userId], (err, rows, fields) => {
+    if (err) {
+      console.log("Failed to query for users: " + err)
+      // throw err
+      // or:
+      // res.end()
+      // return
+      // or:
+      res.sendStatus(500)
+      return
+    }
+    console.log("I think we fetched users successfully")
+
+    const users = rows.map((row) => {
+      return {
+        firstName: row.first_name,
+        lastName: row.last_name
+      }
+    })
+
+    // res.json(rows)
+    res.json(users)
+  })
+
+  // const queryString = "SELECT * FROM users"
+  // connection.query(queryString, (err, rows, fields) => {
+  //   console.log("I think we fetched users successfully")
+  //   res.json(rows)
+  // })
+
+  // res.end()
+})
+
+app.get("/", (req, res) => {
+  console.log("Responding to root route...")
+  res.send("Hellooo from ROOT")
+})
+
+app.get("/users", (req, res) => {
+  // res.send("Nodemon auto updates when I save this file")
+  const user1 = { firstName: "Pavel", lastName: "Palancica" }
+  const user2 = { firstName: "Ahmad", lastName: "Tabibi" }
+  const user3 = { firstName: "Omar", lastName: "Qaddoumi" }
+  res.json([user1, user2, user3])
+})
+
+// localhost:3000
+app.listen(3000, () => {
+  console.log("Server is up and listening on 3000...")
+})
+
+
+--- Video 3
+
+Create a public folder and a form.html file inside it:
+
+<html>
+    <body>
+        <div>
+            Hello from form file
+        </div>
+    </body>
+</html>
+
+The problem at the moment is that we cannot access the form or
+other static files (for instance links like http://localhost:3000/form.html won't work).
+
+The fix is this line inside app.js:
+
+app.use(express.static('./public'))
+
+Change form.html contents to:
+
+<html>
+    <body>
+        <div>
+            Create a user by filling out the fields below:
+            <hr/>
+            <form action="/user_create" method="POST">
+                <input name="first_name" placeholder="First name" />
+                <input name="last_name" placeholder="Last name" />
+                <button>Submit</button>
+            </form>
+        </div>
+    </body>
+</html>
+
+Add the '/user_create' route to app.js:
+
+app.post('/user_create', (req, res) => {
+  console.log("Trying to create a new user...")
+  res.end()
+})
+
+Now we want to get first_name and last_name from the POST request body.
+First, we'll install body-parser.
+
+ppalancica@Pavels-MacBook-Pro nodejs_restapi % npm i body-parser
+
+up to date, audited 68 packages in 1s
+
+2 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+
+Add to app.js:
+
+const bodyParser = require('body-parser')
+
+app.use(bodyParser.urlencoded({ extended: false }))
+
+The app.js file should look like this:
+
+// load our app server using express somehow...
+const express = require('express')
+const app = express()
+const morgan = require('morgan')
+const mysql = require('mysql')
+
+const bodyParser = require('body-parser')
+
+// Middleware configuration
+app.use(bodyParser.urlencoded({ extended: false }))
+
+app.use(express.static('./public'))
+
+// app.use(morgan('short'))
+app.use(morgan('combined'))
+
+app.post('/user_create', (req, res) => {
+  console.log("Trying to create a new user...")
+
+  const firstName = req.body.first_name
+  const lastName = req.body.last_name
+
+  console.log("First name: " + firstName)
+  console.log("Last name: " + lastName)
+
+  const queryString = "INSERT INTO users (first_name, last_name) VALUES (?, ?)"
+  getConnection().query(queryString, [firstName, lastName], (err, results, fields) => {
+    if (err) {
+      console.log("Failed to insert new user: " + err)
+      res.sendStatus(500)
+      return
+    }
+
+    console.log("Inserted a new user with id: " + results.insertId)
+    res.end()
+  })
+})
+
+function getConnection() {
+  return mysql.createConnection({
+    host: 'localhost',
+    port: 8889,
+    user: 'root',
+    password: 'root',
+    database: 'nodejs_restapi_db'
+  })
+}
+
+app.get("/user/:id", (req, res) => {
+  console.log("Fetching user with id: " + req.params.id)
+
+  const connection = getConnection()
+
+  const userId = req.params.id
+  const queryString = "SELECT * FROM users WHERE id = ?"
+  connection.query(queryString, [userId], (err, rows, fields) => {
+    if (err) {
+      console.log("Failed to query for users: " + err)
+      // throw err
+      // or:
+      // res.end()
+      // return
+      // or:
+      res.sendStatus(500)
+      return
+    }
+    console.log("I think we fetched users successfully")
+
+    const users = rows.map((row) => {
+      return {
+        firstName: row.first_name,
+        lastName: row.last_name
+      }
+    })
+
+    res.json(users)
+  })
+})
+
+app.get("/", (req, res) => {
+  console.log("Responding to root route...")
+  res.send("Hellooo from ROOT")
+})
+
+app.get("/users", (req, res) => {
+  console.log("Fetching all users...")
+
+  const connection = getConnection()
+  const queryString = "SELECT * FROM users"
+
+  connection.query(queryString, (err, rows, fields) => {
+    if (err) {
+      console.log("Failed to query for users: " + err)
+      res.sendStatus(500)
+      return
+    }
+    console.log("I think we fetched users successfully")
+    res.json(rows)
+  })
+})
+
+// localhost:3000
+app.listen(3000, () => {
+  console.log("Server is up and listening on 3000...")
+})
+
+
+--- Video 4
+
+We can refactor using Router like this:
+
+const router = express.Router()
+router.get('/messages', (req, res) => {
+  console.log("Show some messages...")
+  res.end()
+})
+
+app.use(router)
+
+Create a routes folder and a user.js file inside it:
+
+// Contains all user related routes
+const express = require('express')
+const router = express.Router()
+
+router.get('/messages', (req, res) => {
+  console.log("Show some messages...")
+  res.end()
+})
+
+// Exports router outside of this file
+module.exports = router
+
+Inside app.js replace this code:
+
+const router = express.Router()
+router.get('/messages', (req, res) => {
+  console.log("Show some messages...")
+  res.end()
+})
+
+with:
+
+const router = require('./routes/user.js')
+
+Mov this method from app.js to routes/user.js:
+
+app.get("/users", (req, res) => {
+  console.log("Fetching all users...")
+
+  const connection = getConnection()
+  const queryString = "SELECT * FROM users"
+
+  connection.query(queryString, (err, rows, fields) => {
+    if (err) {
+      console.log("Failed to query for users: " + err)
+      res.sendStatus(500)
+      return
+    }
+    console.log("I think we fetched users successfully")
+    res.json(rows)
+  })
+})
+
+Change app to router.
+
+Trying to open http://localhost:3000/users/ in browser, would give us this error:
+
+ReferenceError: getConnection is not defined
+
+Move this code from app.js to user.js:
+
+function getConnection() {
+    return mysql.createConnection({
+        host: 'localhost',
+        port: 8889,
+        user: 'root',
+        password: 'root',
+        database: 'nodejs_restapi_db'
+    })
+}
+
+Now we get this error:
+
+ReferenceError: mysql is not defined
+
+Add the mysql import to user.js:
+
+const mysql = require('mysql')
+
+Move this code from app.js to user.js:
+
+app.post('/user_create', (req, res) => {
+  console.log("Trying to create a new user...")
+
+  const firstName = req.body.first_name
+  const lastName = req.body.last_name
+
+  console.log("First name: " + firstName)
+  console.log("Last name: " + lastName)
+
+  const queryString = "INSERT INTO users (first_name, last_name) VALUES (?, ?)"
+  getConnection().query(queryString, [firstName, lastName], (err, results, fields) => {
+    if (err) {
+      console.log("Failed to insert new user: " + err)
+      res.sendStatus(500)
+      return
+    }
+
+    console.log("Inserted a new user with id: " + results.insertId)
+    res.end()
+  })
+})
+
+Change app to router.
+
+Move this code from app.js to user.js:
+
+app.get("/user/:id", (req, res) => {
+  console.log("Fetching user with id: " + req.params.id)
+
+  const connection = getConnection()
+
+  const userId = req.params.id
+  const queryString = "SELECT * FROM users WHERE id = ?"
+  connection.query(queryString, [userId], (err, rows, fields) => {
+    if (err) {
+      console.log("Failed to query for users: " + err)
+      // throw err
+      // or:
+      // res.end()
+      // return
+      // or:
+      res.sendStatus(500)
+      return
+    }
+    console.log("I think we fetched users successfully")
+
+    const users = rows.map((row) => {
+      return {
+        firstName: row.first_name,
+        lastName: row.last_name
+      }
+    })
+
+    res.json(users)
+  })
+})
+
+Change app to router.
+
+Connection Pooling with MySQL connection.
+
+Inside user.js replace this code:
+
+function getConnection() {
+    return mysql.createConnection({
+        host: 'localhost',
+        port: 8889,
+        user: 'root',
+        password: 'root',
+        database: 'nodejs_restapi_db'
+    })
+}
+
+with:
+
+const pool = mysql.createPool({
+    connectionLimit: 10,
+    host: 'localhost',
+    port: 8889,
+    user: 'root',
+    password: 'root',
+    database: 'nodejs_restapi_db'
+})
+
+function getConnection() {
+    return pool
+}
+
+
+--- Video 5
+
+
+Sequel Pro
+
+https://devcenter.heroku.com/articles/heroku-cli
+
+https://devcenter.heroku.com/articles/deploying-nodejs
+
+https://devcenter.heroku.com/articles/cleardb
+
+
+
+Just would like to add one think to this video is somewone is going to deploy thinks onto heroku for real remeber to move your private data like user or password from the js files to .env file in your root directory where U can specify secure variables like for example DB_HOST = 'hostName' and than in code use them with process.env.DB_HOST remember to don't push inofrmations like that onto github U can achive it by typing .env in gitignore. Another way to specify those variables is on heroku gui go to app/settings/config vars
